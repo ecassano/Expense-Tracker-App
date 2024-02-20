@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -18,7 +19,8 @@ export const ExpensesOveriew = () => (
       headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
       headerTintColor: 'white',
       tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-      tabBarActiveTintColor: GlobalStyles.colors.accent500
+      tabBarActiveTintColor: GlobalStyles.colors.accent500,
+      tabBarInactiveTintColor: GlobalStyles.colors.primary100
     }}>
     <BottomTab.Screen
       name='RecentExpenses'

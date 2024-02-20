@@ -1,13 +1,10 @@
-import { StyleSheet, Text, View } from 'react-native';
+import ExpensesOutput from '../components/ExpensesOutput/ExpensesOutput';
+import { DUMMY_EXPENSES } from '../data/expenses';
 
 const AllExpenses = () => {
   return (
-    <View>
-      <Text>AllExpenses</Text>
-    </View>
+    <ExpensesOutput expenses={DUMMY_EXPENSES} period="Total" />
   )
 }
 
 export default AllExpenses
-
-const styles = StyleSheet.create({})
