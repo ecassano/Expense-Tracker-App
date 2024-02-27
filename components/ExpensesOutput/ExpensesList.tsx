@@ -1,6 +1,6 @@
 import { StyleSheet, FlatList, Text, ListRenderItem } from 'react-native'
 import ExpenseItem from './ExpenseItem';
-import { Expense } from './ExpensesOutput'
+import { Expense } from "../../redux/slices/expenses-slice";
 
 type Props = {
   expenses: Expense[];

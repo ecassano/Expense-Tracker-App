@@ -1,9 +1,10 @@
 import ExpensesOutput from '../components/ExpensesOutput/ExpensesOutput';
-import { DUMMY_EXPENSES } from '../data/expenses';
+import { useAppSelector } from '../redux/hooks';
 
 const AllExpenses = () => {
+  const { expenses } = useAppSelector(state => state.expenses);
   return (
-    <ExpensesOutput expenses={DUMMY_EXPENSES} period="Total" />
+    <ExpensesOutput expenses={expenses} period="Total" fallbackText='No registered expenses found' />
   )
 }
 

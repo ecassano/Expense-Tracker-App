@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, NavigationProp } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Provider } from 'react-redux';
 import { Ionicons } from '@expo/vector-icons';
 
 import ManageExpenses from './screens/ManageExpenses';
@@ -10,6 +11,7 @@ import RecentExpenses from './screens/RecentExpenses';
 import AllExpenses from './screens/AllExpenses';
 import { GlobalStyles } from './constants/styles';
 import IconButton from './components/UI/IconButton';
+import { store } from './redux/store';
 
 export type ScreenNames = ["AllExpenses", "RecentExpenses", "ExpensesOverview", "ManageExpense"];
 export type RootStackParamList = Record<ScreenNames[number], any>;
@@ -56,16 +58,18 @@ export const ExpensesOveriew = () => (
 export default function App() {
   return (
     <>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{
-          headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-          headerTintColor: 'white'
-        }}>
-          <Stack.Screen name='ExpensesOverview' component={ExpensesOveriew} options={{ headerShown: false }} />
-          <Stack.Screen name='ManageExpense' component={ManageExpenses} options={{ presentation: 'modal' }} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <StatusBar style="light" />
+      <Provider store={store}>
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{
+            headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+            headerTintColor: 'white'
+          }}>
+            <Stack.Screen name='ExpensesOverview' component={ExpensesOveriew} options={{ headerShown: false }} />
+            <Stack.Screen name='ManageExpense' component={ManageExpenses} options={{ presentation: 'modal' }} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Provider>
     </>
   );
 }

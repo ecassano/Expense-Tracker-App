@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { GlobalStyles } from '../../constants/styles';
-import { Expense } from './ExpensesOutput';
+import { Expense } from "../../redux/slices/expenses-slice";
 
 type Props = {
   expenses: Expense[];

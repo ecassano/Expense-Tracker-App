@@ -1,6 +1,6 @@
 import { StyleSheet, Pressable, View, Text } from 'react-native';
 import { GlobalStyles } from '../../constants/styles';
-import { Expense } from './ExpensesOutput';
+import { Expense } from "../../redux/slices/expenses-slice";
 import { getFormattedDate } from '../../utils/date';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigation } from '../../App';
