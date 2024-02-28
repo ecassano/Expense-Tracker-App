@@ -1,6 +1,6 @@
 import { ParamListBase, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { RootStackParamList } from '../App';
@@ -9,6 +9,9 @@ import { GlobalStyles } from '../constants/styles';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { addExpense, updateExpense, deleteExpense } from '../redux/slices/expenses-slice';
 import ExpenseForm, { InputPropsParsed } from '../components/ManageExpense/ExpenseForm';
+import { axsDeleteExpense, axsStoreExpense, axsUpdateExpense } from '../utils/http';
+import LoadingOverlay from '../components/UI/LoadingOverlay';
+import ErrorOverlay from '../components/UI/ErrorOverlay';
 
 type ManageExpensesRouteParams = {
   expenseId: string;
@@ -20,6 +23,9 @@ type Props = {
 }
 
 const ManageExpenses = ({ route, navigation }: Props) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const dispatch = useAppDispatch();
 
   const params = route.params as ManageExpensesRouteParams;
@@ -34,22 +40,45 @@ const ManageExpenses = ({ route, navigation }: Props) => {
     });
   }, [navigation, isEditing]);
 
-  const deleteExpenseHandler = () => {
-    dispatch(deleteExpense(editedExpenseId));
-    navigation.goBack();
+  const deleteExpenseHandler = async () => {
+    setIsSubmitting(true);
+    try {
+      await axsDeleteExpense(editedExpenseId);
+      dispatch(deleteExpense(editedExpenseId));
+      navigation.goBack();
+    } catch (err) {
+      setError('Could not delete expense - please try again later!');
+      setIsSubmitting(false);
+    }
   }
 
   const cancelHandler = () => {
     navigation.goBack();
   }
 
-  const confirmHandler = (expenseData: InputPropsParsed) => {
-    if (isEditing) {
-      dispatch(updateExpense({ id: editedExpenseId, expenseData }));
-    } else {
-      dispatch(addExpense(expenseData));
+  const confirmHandler = async (expenseData: InputPropsParsed) => {
+    setIsSubmitting(true);
+    try {
+      if (isEditing) {
+        dispatch(updateExpense({ id: editedExpenseId, expenseData }));
+        axsUpdateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = await axsStoreExpense(expenseData);
+        dispatch(addExpense({ id, ...expenseData }));
+      }
+      navigation.goBack();
+    } catch (error) {
+      setError('Could not save data - please try again later!');
+      setIsSubmitting(false);
     }
-    navigation.goBack();
+  }
+
+  if (isSubmitting) {
+    return <LoadingOverlay />
+  }
+
+  if (error && !isSubmitting) {
+    return <ErrorOverlay message={error} />
   }
 
   return (
